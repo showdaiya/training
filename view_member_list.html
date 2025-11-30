@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Member List</title>
+</head>
+<body>
+<h1>Member List</h1>
+
+<!-- メッセージ表示 -->
+<div th:if="${messages}">
+    <ul>
+        <li th:each="msg : ${messages}" th:text="${msg}"></li>
+    </ul>
+</div>
+
+<!-- 検索フォーム -->
+<form th:action="@{/members}" method="post" th:object="${memberListSearchForm}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <div>
+        <label>Keyword:
+            <input type="text" th:field="*{keyword}" />
+        </label>
+    </div>
+    <div>
+        <label>Status:
+            <select th:field="*{status}">
+                <option value="">(All)</option>
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="PAUSED">PAUSED</option>
+                <option value="CANCELED">CANCELED</option>
+            </select>
+        </label>
+    </div>
+    <div>
+        <label>Registered From:
+            <input type="date" th:field="*{registeredFrom}" />
+        </label>
+        <label>To:
+            <input type="date" th:field="*{registeredTo}" />
+        </label>
+    </div>
+    <div>
+        <label>
+            <input type="checkbox" th:field="*{showOnlyRisky}" />
+            show only risky members
+        </label>
+    </div>
+
+    <div>
+        <button type="submit" name="search">Search</button>
+        <button type="submit" name="clear">Clear</button>
+    </div>
+</form>
+
+<!-- 月次サマリ -->
+<div th:if="${monthlySummary}">
+    <h2>Monthly Summary</h2>
+    <p>Total Amount: <span th:text="${monthlySummary.totalAmount}">0</span></p>
+    <p>Total Orders: <span th:text="${monthlySummary.totalOrderCount}">0</span></p>
+
+    <table border="1" th:if="${monthlySummary.byStatus}">
+        <thead>
+        <tr>
+            <th>Status</th>
+            <th>Count</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="entry : ${#maps.entries(monthlySummary.byStatus)}">
+            <td th:text="${entry.key}">STATUS</td>
+            <td th:text="${entry.value}">0</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 会員一覧 -->
+<h2>Result</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Code</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Registered</th>
+        <th>Last Login</th>
+        <th>Total Amount</th>
+        <th>Risky</th>
+        <th>Detail</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member : ${members}">
+        <td th:text="${member.memberId}">1</td>
+        <td th:text="${member.memberCode}">M0001</td>
+        <td th:text="${member.memberName}">Taro</td>
+        <td th:text="${member.email}">taro@example.com</td>
+        <td th:text="${member.statusCode}">ACTIVE</td>
+        <td th:text="${member.registeredDate}">2024-01-01</td>
+        <td th:text="${member.lastLoginAt}">2024-06-01T10:00</td>
+        <td th:text="${member.totalAmount}">10000</td>
+        <td th:text="${member.riskyFlag}">false</td>
+        <td>
+            <a th:href="@{/members/{id}(id=${member.memberId})}">Detail</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

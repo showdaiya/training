@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Billing - Preview</title>
+</head>
+<body>
+<h1>Billing - Preview</h1>
+
+<!-- メッセージ表示 -->
+<div th:if="${messages}">
+    <ul>
+        <li th:each="msg : ${messages}" th:text="${msg}"></li>
+    </ul>
+</div>
+
+<!-- 月指定フォーム -->
+<form th:action="@{/billing}" method="post" th:object="${billingForm}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <div>
+        <label>Target Month (YYYY-MM):
+            <input type="month" th:field="*{targetMonth}" />
+        </label>
+    </div>
+    <div>
+        <button type="submit" name="execute">Execute Billing</button>
+    </div>
+</form>
+
+<!-- 対象一覧 -->
+<h2>Billing Targets</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Member ID</th>
+        <th>Total Amount</th>
+        <th>Order Count</th>
+        <th>Already Billed</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="target : ${targets}">
+        <td th:text="${target.memberId}">1</td>
+        <td th:text="${target.totalAmount}">10000</td>
+        <td th:text="${target.orderCount}">3</td>
+        <td th:text="${target.alreadyBilled}">false</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

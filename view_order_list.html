@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order List</title>
+</head>
+<body>
+<h1>Order List</h1>
+
+<!-- メッセージ表示 -->
+<div th:if="${messages}">
+    <ul>
+        <li th:each="msg : ${messages}" th:text="${msg}"></li>
+    </ul>
+</div>
+
+<!-- 検索フォーム -->
+<form th:action="@{/orders}" method="post" th:object="${orderSearchForm}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <div>
+        <label>Member ID:
+            <input type="number" th:field="*{memberId}" />
+        </label>
+    </div>
+    <div>
+        <label>From:
+            <input type="date" th:field="*{fromDate}" />
+        </label>
+        <label>To:
+            <input type="date" th:field="*{toDate}" />
+        </label>
+    </div>
+    <div>
+        <button type="submit" name="search">Search</button>
+    </div>
+</form>
+
+<!-- サマリ -->
+<div th:if="${summary}">
+    <h2>Summary</h2>
+    <p>Total Amount: <span th:text="${summary.totalAmount}">0</span></p>
+    <p>Total Orders: <span th:text="${summary.orderCount}">0</span></p>
+</div>
+
+<!-- 注文一覧 -->
+<h2>Result</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Order ID</th>
+        <th>Member ID</th>
+        <th>Order Date</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Payment</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.orderId}">1</td>
+        <td th:text="${order.memberId}">1</td>
+        <td th:text="${order.orderDate}">2024-01-01T10:00</td>
+        <td th:text="${order.amount}">1000</td>
+        <td th:text="${order.statusCode}">ORDERED</td>
+        <td th:text="${order.paymentMethodCode}">CREDIT_CARD</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

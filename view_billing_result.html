@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Billing - Result</title>
+</head>
+<body>
+<h1>Billing - Result</h1>
+
+<!-- メッセージ表示 -->
+<div th:if="${messages}">
+    <ul>
+        <li th:each="msg : ${messages}" th:text="${msg}"></li>
+    </ul>
+</div>
+
+<!-- 実行結果一覧 -->
+<h2>Executed Targets</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Member ID</th>
+        <th>Total Amount</th>
+        <th>Order Count</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="target : ${executedTargets}">
+        <td th:text="${target.memberId}">1</td>
+        <td th:text="${target.totalAmount}">10000</td>
+        <td th:text="${target.orderCount}">3</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>
+    <a th:href="@{/billing}">Back</a>
+</p>
+</body>
+</html>
